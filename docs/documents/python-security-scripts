@@ -1,0 +1,40 @@
+Common Python Security Scripts with Code Examples
+1. Port Scanner
+import socket
+def scan_ports(host):
+print(f"Scanning {host}...")
+for port in range(20, 1025):
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+s.settimeout(0.5)
+result = s.connect_ex((host, port))
+if result == 0:
+print(f"Port {port} is open")
+scan_ports("127.0.0.1")
+2. Log File SSH Brute Force Detection
+import re
+with open("/var/log/auth.log", "r") as file:
+for line in file:
+if "Failed password" in line:
+print(line.strip())
+3. Hash Comparison (Password Cracking Helper)
+import hashlib
+def check_hash(wordlist, target_hash):
+for word in open(wordlist, 'r'):
+word = word.strip()
+if hashlib.md5(word.encode()).hexdigest() == target_hash:
+print(f"Match found: {word}")
+return
+print("No match found.")
+check_hash("wordlist.txt", "5f4dcc3b5aa765d61d8327deb882cf99")
+4. File Integrity Checker
+import hashlib
+def file_hash(filepath):
+with open(filepath, "rb") as f:
+return hashlib.sha256(f.read()).hexdigest()
+print(file_hash("/etc/passwd"))
+5. DNS Packet Sniffer with Scapy
+from scapy.all import sniff
+def monitor(pkt):
+if pkt.haslayer("DNS"):
+print(f"DNS Request: {pkt.summary()}")
+sniff(filter="udp port 53", prn=monitor, store=0)
